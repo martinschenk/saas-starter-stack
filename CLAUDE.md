@@ -89,3 +89,33 @@ Set environment variables on your hosting platform.
 3. **`locales/*.json`** - All text content
 4. **`public/` images** - Favicon, logos
 5. **`.env`** - Your API keys and prices
+
+---
+
+## About This Repository
+
+This is the **public Open Source version** of a production SaaS application.
+
+**Live Demo:** https://allgood.click
+
+### Relationship to Production
+
+This repo is synced from a private production repository. Updates are made in the private repo first, then synced here with sensitive data removed automatically.
+
+### What's Been Sanitized
+
+The sync process automatically removes:
+- Real email addresses → `your-email@example.com`
+- Zoho Tax IDs → `YOUR_ZOHO_TAX_ID_XX_PERCENT`
+- Server IPs and deployment configs
+- Test API keys
+
+### Contributing
+
+If you find issues or want to contribute:
+1. Open an issue or PR in this repo
+2. Changes will be reviewed and potentially merged into the private production repo
+
+### License
+
+MIT License - Use freely for any purpose.
