@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- English (default) -->
+  <url>
+    <loc>https://allgood.click/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://allgood.click/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://allgood.click/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://allgood.click/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://allgood.click/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://allgood.click/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://allgood.click/"/>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- German -->
+  <url>
+    <loc>https://allgood.click/de/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://allgood.click/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://allgood.click/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://allgood.click/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://allgood.click/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://allgood.click/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://allgood.click/"/>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Spanish -->
+  <url>
+    <loc>https://allgood.click/es/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://allgood.click/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://allgood.click/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://allgood.click/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://allgood.click/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://allgood.click/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://allgood.click/"/>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- French -->
+  <url>
+    <loc>https://allgood.click/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://allgood.click/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://allgood.click/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://allgood.click/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://allgood.click/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://allgood.click/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://allgood.click/"/>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Portuguese -->
+  <url>
+    <loc>https://allgood.click/pt/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://allgood.click/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://allgood.click/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://allgood.click/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://allgood.click/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://allgood.click/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://allgood.click/"/>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- FAQ Page -->
+  <url>
+    <loc>https://allgood.click/faq.html</loc>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://allgood.click/aviso-legal.html</loc>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://allgood.click/politica-privacidad.html</loc>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://allgood.click/politica-cookies.html</loc>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://allgood.click/terminos.html</loc>
+    <lastmod>2025-11-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

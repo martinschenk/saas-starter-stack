@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Everything OK</title>
+    <meta name="description" content="Click the button to make everything OK">
+    <!-- Favicons - SVG for modern browsers (sharp & scalable!) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2ecc71">
+    <meta name="msapplication-TileColor" content="#2ecc71">
+    <link rel="stylesheet" href="/style.css?v=2.2.13">
+</head>
+<body>
+    <!-- Language Suggestion Banner -->
+    <div id="languageBanner" class="language-banner" style="display: none;">
+        <div class="language-banner-content">
+            <span id="languageBannerText"></span>
+            <a href="#" id="languageBannerLink" class="language-banner-link"></a>
+            <button id="languageBannerClose" class="language-banner-close" aria-label="Close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Main Button Container -->
+    <div id="mainContainer" class="container">
+        <button id="okButton" class="ok-button">
+            <span id="buttonText">Make everything OK</span>
+        </button>
+        <p id="buttonSubtext" class="button-subtext" style="display: none;"></p>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal loading-modal">
+        <div class="modal-content loading-content">
+            <!-- Working On Label - KLEIN & DEZENT -->
+            <div id="workingOnLabel" class="working-on-label">Working on...</div>
+
+            <!-- Problem Display mit Icon -->
+            <div class="problem-display-gratis">
+                <span id="problemIconGratis" class="problem-icon-gratis">⚙️</span>
+                <span id="problemTextGratis" class="problem-text-gratis">Fixing your problems...</span>
+            </div>
+
+            <!-- Progress Card - WEIßE KARTE! -->
+            <div class="progress-card-gratis">
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer will be injected by script.js -->
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="success-screen">
+        <!-- 6 Floating Background Emojis (dezent) -->
+        <div class="floating-emoji-gratis emoji-gratis-1">💚</div>
+        <div class="floating-emoji-gratis emoji-gratis-2">✨</div>
+        <div class="floating-emoji-gratis emoji-gratis-3">🎉</div>
+        <div class="floating-emoji-gratis emoji-gratis-4">👍</div>
+        <div class="floating-emoji-gratis emoji-gratis-5">⭐</div>
+        <div class="floating-emoji-gratis emoji-gratis-6">🌟</div>
+
+        <div class="success-content">
+            <!-- Checkmark Animation -->
+            <div class="checkmark-container-gratis">
+                <div class="checkmark-gratis">
+                    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 27l8 8 16-16" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- ALL GOOD Badge (kleiner als Bezahlversion) -->
+            <div id="allGoodBadgeGratis" class="all-good-badge-gratis">ALL GOOD</div>
+
+            <h1 id="successHeadline" class="success-headline">Everything is OK now</h1>
+            <p id="successSubtext" class="success-subtext">Still not okay?<br>Click again.</p>
+            <button id="continueButton" class="continue-button">
+                <span id="continueButtonText">Mach wirklich alles OK</span>
+            </button>
+        </div>
+        <!-- Footer will be injected by script.js -->
+    </div>
+
+    <!-- Stripe Checkout Modal (Desktop embedded checkout only) -->
+    <div id="stripeModal" class="modal stripe-modal">
+        <div class="modal-content stripe-content">
+            <button id="closeStripeModal" class="close-button">&times;</button>
+            <div id="stripeCheckoutContainer"></div>
+        </div>
+    </div>
+
+    <!-- Payment Selection Screen -->
+    <div id="paymentSelectionScreen" class="payment-selection-screen">
+        <div class="payment-selection-content">
+            <h2 id="paymentSelectionHeadline" class="payment-selection-headline">Okay, jetzt wird's ernst</h2>
+            <p id="paymentSelectionText" class="payment-selection-text">Das kostenlose OK war zum Testen. Für das echte OK gibt's einen fairen Preis.</p>
+
+            <!-- Option 1: One-time payment -->
+            <button id="oneTimeButton" class="payment-option-primary">
+                <span class="option-main-text" id="paymentButton1">Mach wirklich alles OK</span>
+                <span class="option-sub-text" id="paymentButton1Sub">Einmalig 1€ - mehr nicht</span>
+            </button>
+
+            <!-- Subscription Explainer -->
+            <p id="subscriptionExplainer" class="subscription-explainer"></p>
+
+            <!-- Option 2: Subscription -->
+            <button id="subscriptionButton" class="payment-option-secondary">
+                <span class="option-main-text" id="paymentButton2">Mach jeden Freitag alles OK</span>
+                <span class="option-sub-text" id="paymentButton2Sub1">4€/Monat - Automatisch um 13:00 Uhr</span>
+                <span class="option-tiny-text" id="paymentButton2Sub2">(Jederzeit kündbar)</span>
+            </button>
+
+            <!-- Option 3: Decline -->
+            <button id="declineButton" class="payment-option-decline">
+                <span id="paymentButton3">Dann bin ich lieber schon OK</span>
+            </button>
+        </div>
+        <!-- Footer will be injected by script.js -->
+    </div>
+
+    <!-- Footer will be injected by script.js -->
+
+    <!-- Konfetti Library (für Gratis-Version) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="/script.js?v=2.2.13"></script>
+</body>
+</html>

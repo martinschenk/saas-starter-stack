@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything is OK now!</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#2ecc71">
+    <meta name="msapplication-TileColor" content="#2ecc71">
+
+    <!-- SEO: Prevent indexing of payment success page -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+
+    <!-- Main CSS (Footer-Styles etc.) -->
+    <link rel="stylesheet" href="/style.css?v=2.2.13">
+
+    <!-- Konfetti Library (3KB, lightweight) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            height: 100vh;
+            height: -webkit-fill-available;
+            height: 100dvh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating Emojis Background - MEHR & SICHTBARER! */
+        .floating-emoji {
+            position: absolute;
+            font-size: 50px;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(15deg); }
+        }
+
+        .emoji-1 { top: 5%; left: 8%; animation-delay: 0s; font-size: 55px; }
+        .emoji-2 { top: 15%; right: 12%; animation-delay: 1s; }
+        .emoji-3 { bottom: 20%; left: 15%; animation-delay: 2s; font-size: 60px; }
+        .emoji-4 { top: 50%; right: 8%; animation-delay: 1.5s; }
+        .emoji-5 { bottom: 35%; right: 20%; animation-delay: 0.5s; font-size: 45px; }
+        .emoji-6 { top: 25%; left: 25%; animation-delay: 0.8s; }
+        .emoji-7 { bottom: 10%; right: 35%; animation-delay: 1.2s; font-size: 65px; }
+        .emoji-8 { top: 40%; left: 5%; animation-delay: 2.2s; }
+        .emoji-9 { top: 70%; left: 40%; animation-delay: 1.8s; font-size: 50px; }
+        .emoji-10 { top: 10%; left: 50%; animation-delay: 0.3s; }
+        .emoji-11 { bottom: 45%; left: 30%; animation-delay: 1.6s; font-size: 55px; }
+        .emoji-12 { top: 60%; right: 25%; animation-delay: 2.5s; }
+        .emoji-13 { bottom: 5%; left: 60%; animation-delay: 0.9s; font-size: 48px; }
+        .emoji-14 { top: 35%; right: 40%; animation-delay: 1.4s; }
+        .emoji-15 { bottom: 25%; right: 5%; animation-delay: 2.8s; font-size: 58px; }
+
+        @media (max-width: 768px) {
+            .floating-emoji {
+                font-size: 35px;
+                opacity: 0.6;
+            }
+            .emoji-1, .emoji-3, .emoji-7 { font-size: 40px; }
+        }
+
+        /* Loading Modal */
+        .loading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-modal.active {
+            display: flex;
+        }
+
+        /* Checkmark Animation - ZENTRIERT! */
+        .checkmark-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .checkmark {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            background: white;
+            stroke-miterlimit: 10;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+        }
+
+        @media (max-width: 768px) {
+            .checkmark {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: 0 10px 50px rgba(46, 204, 113, 0.4);
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        .checkmark svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .checkmark svg path {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 4;
+            stroke: #27ae60;
+            stroke-miterlimit: 10;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* ALL GOOD Badge - Passt zum Gradient! */
+        .all-good-badge {
+            background: white;
+            color: #11998e;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            box-shadow: 0 5px 25px rgba(17, 153, 142, 0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .all-good-badge {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 5px 25px rgba(17, 153, 142, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(17, 153, 142, 0.5);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Success Container - ZENTRIERT! */
+        .success-container {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 0.5s ease-in;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-container h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .success-container h1 {
+                font-size: 36px;
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 2px 2px 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .success-container p {
+            font-size: 22px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .success-container p {
+                font-size: 18px;
+            }
+        }
+
+        /* Loading Problem Display - GRÖßER & RUHIGER! */
+        .problem-display {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 40px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Icon vor dem Text */
+        .problem-icon {
+            font-size: 48px;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        /* Text größer */
+        .problem-text {
+            font-size: 36px;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .problem-icon {
+                font-size: 36px;
+            }
+            .problem-text {
+                font-size: 24px;
+            }
+
+            /* Working On Label kleiner auf Mobile */
+            #workingOnLabel {
+                font-size: 14px !important;
+            }
+
+            /* Progress Bar schmaler auf Mobile */
+            .progress-card {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            /* Floating Emojis: Weniger auf Mobile (nur die ersten 8) */
+            .emoji-9, .emoji-10, .emoji-11, .emoji-12, .emoji-13, .emoji-14, .emoji-15 {
+                display: none;
+            }
+        }
+
+        /* Extra-kleine Phones (iPhone SE, etc.) */
+        @media (max-width: 480px) {
+            .problem-icon {
+                font-size: 32px;
+            }
+            .problem-text {
+                font-size: 20px;
+            }
+
+            #workingOnLabel {
+                font-size: 13px !important;
+            }
+
+            .progress-card {
+                max-width: 280px;
+            }
+
+            .all-good-badge {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            /* Noch weniger Emojis auf sehr kleinen Screens */
+            .emoji-7, .emoji-8 {
+                display: none;
+            }
+        }
+
+        /* Animation States - LANGSAMER HEARTBEAT PULS */
+        .problem-display {
+            animation: heartbeat 2.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        /* Crossfade Animation - SANFTES ÜBERGEHEN */
+        .problem-icon.fading,
+        .problem-text.fading {
+            opacity: 0;
+        }
+
+        /* FLOATING ICONS - Sanft schwebend wie Background Emojis (DAUERHAFT!) */
+        .floating-problem-icon {
+            position: fixed;
+            font-size: 60px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .floating-problem-icon.visible {
+            opacity: 0.5;
+        }
+
+        @keyframes floatGentle {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-25px) translateX(12px) rotate(6deg);
+            }
+            66% {
+                transform: translateY(-12px) translateX(-12px) rotate(-6deg);
+            }
+        }
+
+        /* Progress Card - WEIßE KARTE statt grün auf grün! */
+        .progress-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .progress-card {
+                padding: 25px 30px;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 14px;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+            border-radius: 50px;
+            transition: width 0.3s ease;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .percentage-text {
+            display: none; /* Versteckt - cleaner ohne Prozent-Anzeige */
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: white;
+            color: #27ae60;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .button {
+                padding: 14px 32px;
+                font-size: 16px;
+            }
+        }
+
+        .buttons-container {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Secondary Button - Unscheinbar */
+        .button-secondary {
+            display: inline-block;
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .button-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .button-secondary {
+                font-size: 13px;
+                padding: 8px 20px;
+            }
+        }
+
+        /* Footer-Styles kommen aus style.css - KEINE Overrides hier! */
+    </style>
+</head>
+<body>
+    <!-- Floating Emojis Background - VIEL MEHR! -->
+    <div class="floating-emoji emoji-1">💚</div>
+    <div class="floating-emoji emoji-2">✨</div>
+    <div class="floating-emoji emoji-3">🎉</div>
+    <div class="floating-emoji emoji-4">👍</div>
+    <div class="floating-emoji emoji-5">⭐</div>
+    <div class="floating-emoji emoji-6">💚</div>
+    <div class="floating-emoji emoji-7">✨</div>
+    <div class="floating-emoji emoji-8">🎊</div>
+    <div class="floating-emoji emoji-9">💫</div>
+    <div class="floating-emoji emoji-10">🌟</div>
+    <div class="floating-emoji emoji-11">💚</div>
+    <div class="floating-emoji emoji-12">✨</div>
+    <div class="floating-emoji emoji-13">🎉</div>
+    <div class="floating-emoji emoji-14">👌</div>
+    <div class="floating-emoji emoji-15">⭐</div>
+
+    <!-- Thank You Screen (shows first for 3 seconds) -->
+    <div id="thankYouScreen" class="loading-modal active">
+        <div class="success-container">
+            <div class="checkmark-container">
+                <div class="checkmark">
+                    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 27l8 8 16-16" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            <h1 id="thankYouForSubscription" style="font-size: 48px; font-weight: 700; color: white; text-align: center; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);"></h1>
+            <p id="continueInAMoment" style="font-size: 18px; color: rgba(255, 255, 255, 0.8); text-align: center; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <!-- Loading Modal with Problems (shows after thank you screen) -->
+    <div id="loadingModal" class="loading-modal" style="display: none;">
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 700px; padding: 20px; position: relative;">
+
+            <!-- Working On Label - KLEIN & DEZENT -->
+            <div id="workingOnLabel" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-top: 60px; margin-bottom: 15px; font-weight: 400;">Working on...</div>
+
+            <!-- Problem Display mit Icon - GRÖßER! -->
+            <div class="problem-display" style="margin-bottom: 80px;">
+                <span id="problemIcon" class="problem-icon">⚙️</span>
+                <span id="problemText" class="problem-text">Fixing your problems...</span>
+            </div>
+
+            <!-- Progress Card - WEIßE KARTE! -->
+            <div class="progress-card">
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <p id="percentageText" class="percentage-text">0%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Page (shows after loading) -->
+    <div id="successPage" class="success-container" style="display: none;">
+        <div class="checkmark-container">
+            <div class="checkmark">
+                <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 27l8 8 16-16" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+        <div id="allGoodBadge" class="all-good-badge"></div>
+        <h1 id="thankYouHeadline"></h1>
+        <p id="thankYouText"></p>
+
+        <div class="buttons-container">
+            <button class="button" id="repeatButton" onclick="repeatAnimation()"></button>
+            <a href="#" class="button-secondary" id="homeButton" onclick="goToHome(); return false;"></a>
+        </div>
+    </div>
+
+    <!-- Footer wird dynamisch über JavaScript eingefügt -->
+
+    <script>
+        let translations = {};
+        let confettiTriggered = false;
+
+        // Simple footer template (DRY - defined once, used everywhere)
+        function createFooterHTML(idPrefix = '', extraClass = '') {
+            return `
+                <footer class="footer ${extraClass}">
+                    <div class="footer-content">
+                        <a href="/faq.html" class="footer-link">
+                            <span id="${idPrefix}faqHeadline">FAQ</span>
+                        </a>
+                        <span class="footer-separator">|</span>
+                        <a href="/aviso-legal" class="footer-link">
+                            <span class="footer-text-desktop" id="${idPrefix}footerLegalNoticeFull">Legal Notice</span>
+                            <span class="footer-text-mobile" id="${idPrefix}footerLegalNoticeShort">Legal</span>
+                        </a>
+                        <span class="footer-separator">|</span>
+                        <a href="/politica-privacidad" class="footer-link">
+                            <span class="footer-text-desktop" id="${idPrefix}footerPrivacyPolicyFull">Privacy Policy</span>
+                            <span class="footer-text-mobile" id="${idPrefix}footerPrivacyPolicyShort">Privacy</span>
+                        </a>
+                        <span class="footer-separator">|</span>
+                        <a href="/politica-cookies" class="footer-link">
+                            <span class="footer-text-desktop" id="${idPrefix}footerCookiePolicyFull">Cookie Policy</span>
+                            <span class="footer-text-mobile" id="${idPrefix}footerCookiePolicyShort">Cookies</span>
+                        </a>
+                        <span class="footer-separator">|</span>
+                        <a href="/terminos" class="footer-link">
+                            <span class="footer-text-desktop" id="${idPrefix}footerTermsFull">Terms of Service</span>
+                            <span class="footer-text-mobile" id="${idPrefix}footerTermsShort">Terms</span>
+                        </a>
+                        <span class="footer-separator">|</span>
+                        <select id="${idPrefix}languageSelector" class="language-selector" aria-label="Select language">
+                            <option value="en">English</option>
+                            <option value="de">Deutsch</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="pt">Português</option>
+                        </select>
+                    </div>
+                </footer>
+            `;
+        }
+
+        // Inject footer into DOM
+        function injectFooter() {
+            document.body.insertAdjacentHTML('beforeend', createFooterHTML());
+        }
+
+        // Load translations
+        async function loadTranslations() {
+            try {
+                // Get lang parameter from URL if present
+                const urlParams = new URLSearchParams(window.location.search);
+                const lang = urlParams.get('lang');
+                const apiUrl = lang ? `/api/locale?lang=${lang}` : '/api/locale';
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                translations = data.translations;
+
+                console.log('🌍 Language loaded:', data.lang);
+
+                // Update all text content
+                document.getElementById('thankYouForSubscription').textContent = translations.thankYouForSubscription || 'Thank you for your subscription!';
+                document.getElementById('continueInAMoment').textContent = translations.continueInAMoment || 'Continuing in a moment...';
+                document.getElementById('allGoodBadge').textContent = translations.allGoodBadge || 'ALL GOOD';
+                document.getElementById('thankYouHeadline').textContent = translations.thankYouHeadline;
+                document.getElementById('thankYouText').textContent = translations.thankYouText;
+                document.getElementById('repeatButton').textContent = translations.backButton || 'One more time';
+                document.getElementById('homeButton').textContent = translations.homeButton || 'Back to Home';
+                document.getElementById('workingOnLabel').textContent = translations.workingOn || 'Working on...';
+
+                // Translate footer
+                translateFooter();
+                setupLanguageSelector();
+            } catch (error) {
+                console.error('Failed to load translations:', error);
+            }
+        }
+
+        // Translate footer elements (kopiert aus script.js)
+        function translateFooter(idPrefix = '') {
+            if (!translations) return;
+
+            // Helper function
+            const el = (id) => document.getElementById(idPrefix + id);
+
+            // FAQ
+            if (el('faqHeadline')) el('faqHeadline').textContent = translations.faqHeadline || 'FAQ';
+
+            // Desktop texts
+            if (el('footerLegalNoticeFull')) el('footerLegalNoticeFull').textContent = translations.footerLegalNoticeFull || 'Legal Notice';
+            if (el('footerPrivacyPolicyFull')) el('footerPrivacyPolicyFull').textContent = translations.footerPrivacyPolicyFull || 'Privacy Policy';
+            if (el('footerCookiePolicyFull')) el('footerCookiePolicyFull').textContent = translations.footerCookiePolicyFull || 'Cookie Policy';
+            if (el('footerTermsFull')) el('footerTermsFull').textContent = translations.footerTermsFull || 'Terms of Service';
+
+            // Mobile texts
+            if (el('footerLegalNoticeShort')) el('footerLegalNoticeShort').textContent = translations.footerLegalNoticeShort || 'Legal';
+            if (el('footerPrivacyPolicyShort')) el('footerPrivacyPolicyShort').textContent = translations.footerPrivacyPolicyShort || 'Privacy';
+            if (el('footerCookiePolicyShort')) el('footerCookiePolicyShort').textContent = translations.footerCookiePolicyShort || 'Cookies';
+            if (el('footerTermsShort')) el('footerTermsShort').textContent = translations.footerTermsShort || 'Terms';
+        }
+
+        // Get current language from URL parameter or path
+        function getCurrentLanguage() {
+            // Check URL path first (e.g., /de/ -> 'de')
+            const path = window.location.pathname;
+            const pathLangMatch = path.match(/^\/([a-z]{2})\//);
+            if (pathLangMatch) {
+                return pathLangMatch[1];
+            }
+
+            // Fall back to URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang');
+            if (langParam) {
+                return langParam;
+            }
+
+            // Default to English
+            return 'en';
+        }
+
+        // Setup language selector (kopiert aus script.js)
+        function setupLanguageSelector(idPrefix = '') {
+            const languageSelector = document.getElementById(idPrefix + 'languageSelector');
+            if (!languageSelector) return;
+
+            // Pre-select current language
+            const currentLang = getCurrentLanguage();
+            languageSelector.value = currentLang;
+
+            // Add change event listener
+            languageSelector.addEventListener('change', (e) => {
+                const newLang = e.target.value;
+                // Redirect to language-specific URL
+                const baseUrl = window.location.origin;
+                if (newLang === 'en') {
+                    window.location.href = baseUrl + '/';
+                } else {
+                    window.location.href = baseUrl + '/' + newLang + '/';
+                }
+            });
+        }
+
+        // FLOATING ICONS - Dauerhaft schwebend wie Background-Emojis!
+        let currentFloatingIcons = [];
+
+        function clearFloatingIcons() {
+            // Fade out alte Icons
+            currentFloatingIcons.forEach(icon => {
+                icon.classList.remove('visible');
+                setTimeout(() => icon.remove(), 1000);
+            });
+            currentFloatingIcons = [];
+        }
+
+        function showFloatingIcons(icon) {
+            // Alte Icons ausblenden
+            clearFloatingIcons();
+
+            const starfield = document.getElementById('starfield');
+            const iconCount = 5;
+
+            // Generiere 5 zufällige Positionen
+            for (let i = 0; i < iconCount; i++) {
+                const x = 10 + Math.random() * 80;  // 10-90%
+                const y = 15 + Math.random() * 70;  // 15-85%
+
+                const iconElement = document.createElement('div');
+                iconElement.className = 'floating-problem-icon';
+                iconElement.textContent = icon;
+                iconElement.style.left = x + '%';
+                iconElement.style.top = y + '%';
+
+                // Sanft schweben - DAUERHAFT!
+                const duration = 5 + Math.random() * 3; // 5-8 Sekunden
+                const delay = Math.random() * 2; // 0-2 Sekunden Delay
+                iconElement.style.animation = `floatGentle ${duration}s ease-in-out ${delay}s infinite`;
+
+                starfield.appendChild(iconElement);
+                currentFloatingIcons.push(iconElement);
+
+                // Fade in gestaffelt
+                setTimeout(() => {
+                    iconElement.classList.add('visible');
+                }, i * 150);
+            }
+        }
+
+        // Konfetti Funktion - SICHTBAR & OPTIMAL!
+        function triggerConfetti() {
+            if (confettiTriggered) return;
+            confettiTriggered = true;
+
+            const duration = 6 * 1000; // 6 Sekunden - perfekte Balance!
+            const end = Date.now() + duration;
+
+            // KRÄFTIGERE FARBEN - Bessere Sichtbarkeit auf grünem Hintergrund
+            const colors = ['#ffffff', '#FFD700', '#ff69b4', '#00ffff', '#ff6347'];
+
+            (function frame() {
+                // MEHR PARTIKEL (5 statt 3) pro Frame
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 70,
+                    origin: { x: 0, y: 0.7 },
+                    colors: colors,
+                    ticks: 400, // Länger sichtbar
+                    gravity: 0.8,
+                    scalar: 1.2 // Größere Partikel
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 70,
+                    origin: { x: 1, y: 0.7 },
+                    colors: colors,
+                    ticks: 400,
+                    gravity: 0.8,
+                    scalar: 1.2
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // BONUS: Großer Burst am Anfang!
+            confetti({
+                particleCount: 100,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: colors,
+                ticks: 300,
+                scalar: 1.5
+            });
+        }
+
+        // Show thank you screen for 3 seconds
+        function showThankYouScreen() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    document.getElementById('thankYouScreen').style.display = 'none';
+                    document.getElementById('loadingModal').style.display = 'flex';
+                    resolve();
+                }, 3000); // 3 seconds
+            });
+        }
+
+        // Show loading animation with problems
+        function showLoadingAnimation() {
+            return new Promise((resolve) => {
+                const loadingModal = document.getElementById('loadingModal');
+                const progressBar = document.getElementById('progressBar');
+                const percentageText = document.getElementById('percentageText');
+                const problemDisplay = document.getElementById('problemDisplay');
+
+                const problems = translations.loadingProblems || [
+                    "⚙️ Fixing your problems...",
+                    "📋 Organizing your life...",
+                    "🚀 Optimizing your future...",
+                    "🔧 Repairing your worries...",
+                    "🧘 Removing stress...",
+                    "🧹 Organizing chaos...",
+                    "🧩 Solving life's puzzles...",
+                    "🎯 Calibrating happiness...",
+                    "✨ Installing good vibes...",
+                    "💨 Removing bad energy..."
+                ];
+
+                // TIMING: 2 Sekunden pro Text mit coolen Animationen!
+                const problemInterval = 2000; // 2 seconds per text
+                const duration = problems.length * problemInterval; // Automatisch angepasst!
+
+                console.log('🔍 [DEBUG] Problems loaded:', problems.length, 'texts × 2s =', duration/1000, 'seconds total');
+
+                const startTime = Date.now();
+                let currentProblemIndex = 0;
+                let lastProblemChange = Date.now();
+
+                // Extract icons from problem texts - Icon-Mapping für alle Sprachen
+                const iconMap = {
+                    '⚙️': ['Fixing', 'Repariere', 'Répare', 'Reparando', 'Consertando'],
+                    '📋': ['Organizing your life', 'Sortiere', 'Organisiere', 'Organise', 'Organizando'],
+                    '🚀': ['Optimizing', 'Optimiere', 'Optimise', 'Optimizando'],
+                    '🔧': ['Repairing', 'Fixe', 'Arreglando', 'Arrumando'],
+                    '🧘': ['Removing stress', 'Beseitige', 'Élimine le stress', 'Eliminando estrés', 'Eliminando estresse'],
+                    '🧹': ['chaos', 'Chaos', 'caos'],
+                    '🧩': ['Solving', 'Löse', 'Résous', 'Resolviendo', 'Resolvendo'],
+                    '🎯': ['Calibrating', 'Kalibriere', 'Calibre', 'Calibrando'],
+                    '✨': ['Installing', 'Installiere', 'Installe', 'Instalando'],
+                    '💨': ['Removing bad', 'Entferne', 'Élimine', 'Eliminando mala', 'Removendo']
+                };
+
+                function getIconForText(text) {
+                    for (const [icon, keywords] of Object.entries(iconMap)) {
+                        for (const keyword of keywords) {
+                            if (text.includes(keyword)) {
+                                return icon;
+                            }
+                        }
+                    }
+                    return '⭐'; // Fallback
+                }
+
+                // Funktion um Emoji vom Anfang zu entfernen (sicherer als substring!)
+                function removeLeadingEmoji(text) {
+                    // Finde den ersten Buchstaben (nach Emoji + Leerzeichen)
+                    const match = text.match(/[A-Za-zÀ-ÿ]/);
+                    if (match) {
+                        return text.substring(match.index);
+                    }
+                    return text; // Fallback
+                }
+
+                // Set initial problem!
+                const initialText = removeLeadingEmoji(problems[0]);
+                const initialIcon = getIconForText(problems[0]);
+                document.getElementById('problemIcon').textContent = initialIcon;
+                document.getElementById('problemText').textContent = initialText;
+                console.log('🔍 [DEBUG] Initial problem:', problems[0], 'Icon:', initialIcon);
+
+                // Function to change problem text - CROSSFADE!
+                function changeProblemText(newIndex) {
+                    const iconElement = document.getElementById('problemIcon');
+                    const textElement = document.getElementById('problemText');
+
+                    // Fade out (opacity 0)
+                    iconElement.classList.add('fading');
+                    textElement.classList.add('fading');
+
+                    // Wait for fade out, then change content and fade in
+                    setTimeout(() => {
+                        // Change content
+                        const newIcon = getIconForText(problems[newIndex]);
+                        const newText = removeLeadingEmoji(problems[newIndex]);
+
+                        iconElement.textContent = newIcon;
+                        textElement.textContent = newText;
+
+                        // Fade in (opacity 1)
+                        iconElement.classList.remove('fading');
+                        textElement.classList.remove('fading');
+
+                        console.log('🔍 [DEBUG] Problem #' + newIndex + ':', newText, 'Icon:', newIcon);
+                    }, 800); // Match CSS transition duration
+                }
+
+                const interval = setInterval(() => {
+                    const now = Date.now();
+                    const elapsed = now - startTime;
+                    const progress = Math.min((elapsed / duration) * 100, 100);
+
+                    progressBar.style.width = `${progress}%`;
+                    percentageText.textContent = Math.floor(progress) + '%';
+
+                    // Change problem every 2 seconds - OHNE async/await!
+                    if (now - lastProblemChange >= problemInterval) {
+                        currentProblemIndex = (currentProblemIndex + 1) % problems.length;
+                        changeProblemText(currentProblemIndex); // Kein await!
+                        lastProblemChange = now;
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            loadingModal.style.display = 'none';
+                            document.getElementById('successPage').style.display = 'flex';
+                            triggerConfetti();
+                            resolve();
+                        }, 300);
+                    }
+                }, 50);
+            });
+        }
+
+        // Repeat Animation - DIREKT zur Loading Animation (ohne "Danke" Screen)
+        // Go back to home page in current language
+        function goToHome() {
+            // Clear all storage
+            sessionStorage.clear();
+            localStorage.clear();
+
+            // Get current language
+            const currentLang = getCurrentLanguage();
+
+            // Build correct home URL based on language
+            const homeUrl = currentLang === 'en' ? '/' : `/${currentLang}/`;
+
+            // Navigate to home
+            window.location.href = homeUrl;
+        }
+
+        function repeatAnimation() {
+            // Reset confetti
+            confettiTriggered = false;
+
+            // Hide success page, show loading modal
+            document.getElementById('successPage').style.display = 'none';
+            document.getElementById('loadingModal').style.display = 'flex';
+
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('percentageText').textContent = '0%';
+
+            // Run loading animation direkt (ohne Thank You Screen!)
+            setTimeout(async () => {
+                await showLoadingAnimation();
+            }, 100);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Inject footer first (before translations)
+            injectFooter();
+
+            // Load translations and update content
+            await loadTranslations();
+
+            // Show animations
+            await showThankYouScreen();
+            await showLoadingAnimation();
+        });
+    </script>
+</body>
+</html>

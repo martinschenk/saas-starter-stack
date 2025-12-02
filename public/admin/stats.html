@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Analytics - allgood.click</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header select {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    header select:focus {
+      border-color: #27ae60;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-refresh {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+
+    .btn-refresh:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+    }
+
+    .btn-logout {
+      background: #f5f5f5;
+      color: #666;
+    }
+
+    .btn-logout:hover {
+      background: #eee;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .kpi-card .value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #27ae60;
+      display: block;
+    }
+
+    .kpi-card .label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .chart-container h2 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .chart-container canvas {
+      max-height: 300px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      width: 80px;
+      font-size: 13px;
+      color: #666;
+      flex-shrink: 0;
+    }
+
+    .stat-bar-container {
+      flex: 1;
+      height: 20px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+
+    .stat-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .stat-value {
+      width: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      text-align: right;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: white;
+      font-size: 18px;
+    }
+
+    /* Error State */
+    .error-message {
+      background: #fee;
+      color: #c00;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Generated Time */
+    .generated-time {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      .kpi-card .value {
+        font-size: 28px;
+      }
+
+      .stat-label {
+        width: 60px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>allgood.click Analytics</h1>
+      <div class="header-controls">
+        <select id="days" onchange="loadStats()">
+          <option value="7">Letzte 7 Tage</option>
+          <option value="30" selected>Letzte 30 Tage</option>
+          <option value="90">Letzte 90 Tage</option>
+        </select>
+        <button class="btn btn-refresh" onclick="loadStats()">Aktualisieren</button>
+        <a href="/admin/logout" class="btn btn-logout">Logout</a>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="value" id="total">-</span>
+        <span class="label">Gesamt</span>
+      </div>
+      <div class="kpi-card">
+        <span class="value" id="humans">-</span>
+        <span class="label">Menschen</span>
+      </div>
+      <div class="kpi-card">
+        <span class="value" id="bots">-</span>
+        <span class="label">Bots</span>
+      </div>
+      <div class="kpi-card">
+        <span class="value" id="ratio">-</span>
+        <span class="label">Human-Rate</span>
+      </div>
+    </div>
+
+    <!-- Daily Chart -->
+    <div class="chart-container">
+      <h2>Besucher pro Tag</h2>
+      <canvas id="dailyChart"></canvas>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Nach Seite</h3>
+        <div id="pageStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach Land</h3>
+        <div id="countryStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach Sprache</h3>
+        <div id="languageStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach Device</h3>
+        <div id="deviceStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach Browser</h3>
+        <div id="browserStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach OS</h3>
+        <div id="osStats"></div>
+      </div>
+      <div class="stat-card">
+        <h3>Nach Referrer</h3>
+        <div id="referrerStats"></div>
+      </div>
+    </div>
+
+    <div class="generated-time" id="generatedTime"></div>
+  </div>
+
+  <script>
+    let dailyChart = null;
+
+    async function loadStats() {
+      const days = document.getElementById('days').value;
+
+      try {
+        const res = await fetch(`/api/stats?days=${days}`);
+
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/admin/login';
+          return;
+        }
+
+        const data = await res.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.error('Error loading stats:', err);
+      }
+    }
+
+    function renderDashboard(data) {
+      // KPIs
+      document.getElementById('total').textContent = formatNumber(data.total);
+      document.getElementById('humans').textContent = formatNumber(data.humans);
+      document.getElementById('bots').textContent = formatNumber(data.bots);
+
+      const ratio = data.total > 0 ? Math.round((data.humans / data.total) * 100) : 0;
+      document.getElementById('ratio').textContent = ratio + '%';
+
+      // Daily Chart
+      renderDailyChart(data.perDay);
+
+      // Stats Bars
+      renderStatBars('pageStats', data.byPage, 'page');
+      renderStatBars('countryStats', data.byCountry, 'country');
+      renderStatBars('languageStats', data.byLanguage, 'language');
+      renderStatBars('deviceStats', data.byDevice, 'device_type');
+      renderStatBars('browserStats', data.byBrowser, 'browser');
+      renderStatBars('osStats', data.byOS, 'os');
+      renderStatBars('referrerStats', data.byReferrer, 'referrer');
+
+      // Generated time
+      const time = new Date(data.generated).toLocaleString('de-DE');
+      document.getElementById('generatedTime').textContent = `Generiert: ${time}`;
+    }
+
+    function renderDailyChart(perDay) {
+      const ctx = document.getElementById('dailyChart').getContext('2d');
+
+      // Sort by date ascending
+      const sorted = [...perDay].sort((a, b) => a.date.localeCompare(b.date));
+
+      const labels = sorted.map(d => {
+        const date = new Date(d.date);
+        return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+      });
+
+      const values = sorted.map(d => d.count);
+
+      if (dailyChart) {
+        dailyChart.destroy();
+      }
+
+      dailyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Besucher',
+            data: values,
+            borderColor: '#27ae60',
+            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: '#27ae60'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderStatBars(elementId, data, key) {
+      const container = document.getElementById(elementId);
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div style="color: #999; font-size: 13px;">Keine Daten</div>';
+        return;
+      }
+
+      const max = Math.max(...data.map(d => d.count));
+      const total = data.reduce((sum, d) => sum + d.count, 0);
+
+      container.innerHTML = data.slice(0, 6).map(item => {
+        const label = item[key] || 'Unbekannt';
+        const percent = max > 0 ? (item.count / max) * 100 : 0;
+        const share = total > 0 ? Math.round((item.count / total) * 100) : 0;
+
+        return `
+          <div class="stat-row">
+            <span class="stat-label" title="${label}">${truncate(label, 10)}</span>
+            <div class="stat-bar-container">
+              <div class="stat-bar" style="width: ${percent}%"></div>
+            </div>
+            <span class="stat-value">${item.count} (${share}%)</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+      }
+      return num.toString();
+    }
+
+    function truncate(str, len) {
+      if (str.length <= len) return str;
+      return str.substring(0, len) + '...';
+    }
+
+    // Load stats on page load
+    loadStats();
+
+    // Auto-refresh every 5 minutes
+    setInterval(loadStats, 5 * 60 * 1000);
+  </script>
+</body>
+</html>

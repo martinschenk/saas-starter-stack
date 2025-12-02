@@ -1,0 +1,18 @@
+# robots.txt for allgood.click
+
+User-agent: *
+Allow: /
+Allow: /de/
+Allow: /es/
+Allow: /fr/
+Allow: /pt/
+
+# Admin area - not for search engines
+Disallow: /admin/
+Disallow: /api/stats
+
+# Sitemap
+Sitemap: https://allgood.click/sitemap.xml
+
+# Crawl delay (be nice to search engines)
+Crawl-delay: 1

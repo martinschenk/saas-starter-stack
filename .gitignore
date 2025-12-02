@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment variables (NEVER commit!)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build files
+dist/
+build/
+
+# Analytics database (contains visitor data)
+data/

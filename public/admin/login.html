@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Login - allgood.click</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+
+    .login-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      margin: 20px;
+    }
+
+    .login-card h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .login-card p {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .login-card input[type="password"]:focus {
+      border-color: #27ae60;
+    }
+
+    .login-card button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-card button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+    }
+
+    .login-card button:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      background: #fee;
+      color: #c00;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h1>Analytics</h1>
+    <p>allgood.click Dashboard</p>
+
+    <div class="error" id="error" style="display: none;">
+      Falsches Passwort
+    </div>
+
+    <form action="/admin/login" method="POST">
+      <input type="password" name="password" placeholder="Passwort eingeben" required autofocus>
+      <button type="submit">Login</button>
+    </form>
+
+    <a href="/" class="back-link">&larr; Zuruck zu allgood.click</a>
+  </div>
+
+  <script>
+    // Show error message if redirected with error
+    if (window.location.search.includes('error=1')) {
+      document.getElementById('error').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
